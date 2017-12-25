@@ -21,7 +21,7 @@ export class EditorFor extends React.Component<EditorForProps, any>{
             modelState.validationState === ModelStateValue.Invalid &&
             modelState.errors) {
             return <div>
-                       {modelState.errors.map(error => <div className="text-danger">{error.errorMessage}</div>)}
+                       {modelState.errors.map(error => <div className="text-danger" key="error">{error.errorMessage}</div>)}
                    </div>;
         } else {
             return <div></div>;

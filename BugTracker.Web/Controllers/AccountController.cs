@@ -48,6 +48,40 @@ namespace BugTracker.Web.Controllers
             return Json(ModelState);
         }
 
+        [HttpPost]
+        [AllowAnonymous]
+        public async Task<IActionResult> Login(LogInModel model, string returnUrl = null)
+        {
+            ViewData["ReturnUrl"] = returnUrl;
+            if (ModelState.IsValid)
+            {
+                // This doesn't count login failures towards account lockout
+                // To enable password failures to trigger account lockout, set lockoutOnFailure: true
+                var result = await _signInManager.PasswordSignInAsync(model.Email,
+                    model.Password, model.RememberMe, lockoutOnFailure: false);
+                if (result.Succeeded)
+                {
+                    return Json(ModelState);
+                }
+                if (result.RequiresTwoFactor)
+                {
+                    return Json(ModelState);
+                }
+                if (result.IsLockedOut)
+                {
+                    return Json(ModelState);
+                }
+                else
+                {
+                    ModelState.AddModelError("GeneralModelStateEntry", "Invalid login attempt.");
+                    return Json(ModelState);
+                }
+            }
+
+            // If we got this far, something failed, redisplay form
+            return Json(ModelState);
+        }
+
         private void AddErrors(IdentityResult result)
         {
             foreach (var error in result.Errors)

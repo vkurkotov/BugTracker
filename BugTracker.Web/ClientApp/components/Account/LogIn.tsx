@@ -1,23 +1,18 @@
 ﻿import * as React from "react";
 import { RouteComponentProps } from "react-router";
-import { ModelStateEntry } from "../MVCClassesPort/ModelStateEntry";
-import { GeneralModelStateResponse } from "../MVCClassesPort/GeneralModelStateResponse";
-import { EditorFor } from "./EditorFor";
+import { ModelStateEntry } from "../../MVCClassesPort/ModelStateEntry";
+import { GeneralModelStateResponse } from "../../MVCClassesPort/GeneralModelStateResponse";
+import { EditorFor } from "../EditorFor";
 
-export class Register extends React.Component<RouteComponentProps<{}>, RegisterForm> {
+export class LogIn extends React.Component<RouteComponentProps<{}>, LogInForm> {
     constructor(props: RouteComponentProps<{}>) {
         super(props);
 
         this.handleInputChange = this.handleInputChange.bind(this);
-
         this.handleSubmit = this.handleSubmit.bind(this);
 
-        const defaultState: RegisterForm = {
+        const defaultState: LogInForm = {
             Email: {
-                Value: "",
-                ModelState: new ModelStateEntry()
-            },
-            ConfirmPassword: {
                 Value: "",
                 ModelState: new ModelStateEntry()
             },
@@ -26,6 +21,10 @@ export class Register extends React.Component<RouteComponentProps<{}>, RegisterF
                 ModelState: new ModelStateEntry()
             },
             GeneralModel: {
+                ModelState: new ModelStateEntry()
+            },
+            RememberMe: {
+                Value: false,
                 ModelState: new ModelStateEntry()
             }
         };
@@ -42,7 +41,7 @@ export class Register extends React.Component<RouteComponentProps<{}>, RegisterF
 
         curr[name].Value = value;
         curr[name].ModelState = new ModelStateEntry();
-        this.setState(curr as RegisterForm);
+        this.setState(curr as LogInForm);
     }
 
 
@@ -59,23 +58,23 @@ export class Register extends React.Component<RouteComponentProps<{}>, RegisterF
         };
         */
 
-        fetch("/Account/Register",
+        fetch("/Account/LogIn",
                 {
                     method: "POST",
                     body: form
                 })
-            .then(res => res.json() as Promise<RegisterResponse>)
+            .then(res => res.json() as Promise<LogInResponse>)
             .then(data => {
                 const currentState = this.state;
                 currentState.Email.ModelState = data.Email;
                 currentState.Password.ModelState = data.Password;
-                currentState.ConfirmPassword.ModelState = data.ConfirmPassword;
+                currentState.RememberMe.ModelState = data.RememberMe;
                 currentState.GeneralModel.ModelState = data.GeneralModelStateEntry;
                 this.setState(currentState);
             });
     }
 
-    public render() {
+    render() {
         return <div>
                    <h1>Create a new account</h1>
                    <div className="row">
@@ -87,20 +86,20 @@ export class Register extends React.Component<RouteComponentProps<{}>, RegisterF
                                           value={this.state.Email.Value}
                                           modelState={this.state.Email.ModelState}
                                           onChange={this.handleInputChange}
-                                          type="email"/>
+                                          type="Email" />
                                <EditorFor label="Password"
                                           name="Password"
                                           value={this.state.Password.Value}
                                           modelState={this.state.Password.ModelState}
                                           onChange={this.handleInputChange}
-                                          type="password"/>
-                               <EditorFor label="Confirm Password"
-                                          name="ConfirmPassword"
-                                          value={this.state.ConfirmPassword.Value}
-                                          modelState={this.state.ConfirmPassword.ModelState}
+                                          type="Password" />
+                               <EditorFor label="Remember me"
+                                          name="RememberMe"
+                                          value={this.state.RememberMe.Value}
+                                          modelState={this.state.RememberMe.ModelState}
                                           onChange={this.handleInputChange}
-                                          type="password"/>
-                               <button type="submit" className="btn btn-default" onClick={this.handleSubmit}>Register</button>
+                                          type="checkbox" />
+                               <button type="submit" className="btn btn-default" onClick={this.handleSubmit}>Log In</button>
                            </form>
                        </div>
                    </div>
@@ -108,19 +107,19 @@ export class Register extends React.Component<RouteComponentProps<{}>, RegisterF
     }
 }
 
-interface IRegisterModel {
+interface LogInModel {
     Email: string;
     Password: string;
-    ConfirmPassword: string;
+    RememberMe: boolean;
 }
 
-interface RegisterResponse extends GeneralModelStateResponse {
+interface LogInResponse extends GeneralModelStateResponse {
     Email: ModelStateEntry;
     Password: ModelStateEntry;
-    ConfirmPassword: ModelStateEntry;
+    RememberMe: ModelStateEntry;
 }
 
-interface RegisterForm {
+interface LogInForm {
     Email: {
         Value: string;
         ModelState: ModelStateEntry;
@@ -129,8 +128,8 @@ interface RegisterForm {
         Value: string;
         ModelState: ModelStateEntry;
     };
-    ConfirmPassword: {
-        Value: string;
+    RememberMe: {
+        Value: boolean;
         ModelState: ModelStateEntry;
     };
     GeneralModel: {
