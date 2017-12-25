@@ -2,10 +2,10 @@
 
 export class ModelStateEntry {
     errors: Array<ModelError>;
-    ValidationState: ModelStateValue;
+    validationState: ModelStateValue;
     AttemptedValue: string;
 
     public constructor() {
-        this.ValidationState = ModelStateValue.Unvalidated;
+        this.validationState = ModelStateValue.Unvalidated;
     }
 }

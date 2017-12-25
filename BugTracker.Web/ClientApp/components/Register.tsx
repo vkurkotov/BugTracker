@@ -1,8 +1,8 @@
-﻿import * as React from 'react';
-import { RouteComponentProps } from 'react-router';
-import { ModelStateEntry } from '../MVCClassesPort/ModelStateEntry';
-import { GeneralModelStateResponse } from '../MVCClassesPort/GeneralModelStateResponse';
-import { ModelStateValue } from "../enums/ModelStateValue";
+﻿import * as React from "react";
+import { RouteComponentProps } from "react-router";
+import { ModelStateEntry } from "../MVCClassesPort/ModelStateEntry";
+import { GeneralModelStateResponse } from "../MVCClassesPort/GeneralModelStateResponse";
+import { EditorFor } from "./EditorFor";
 
 export class Register extends React.Component<RouteComponentProps<{}>, RegisterForm> {
     constructor(props: RouteComponentProps<{}>) {
@@ -12,7 +12,7 @@ export class Register extends React.Component<RouteComponentProps<{}>, RegisterF
 
         this.handleSubmit = this.handleSubmit.bind(this);
 
-        let defaultState: RegisterForm = {
+        const defaultState: RegisterForm = {
             Email: {
                 Value: "",
                 ModelState: new ModelStateEntry()
@@ -35,12 +35,13 @@ export class Register extends React.Component<RouteComponentProps<{}>, RegisterF
 
     handleInputChange(event: any) {
         const target = event.target;
-        const value = target.type === 'checkbox' ? target.checked : target.value;
+        const value = target.type === "checkbox" ? target.checked : target.value;
         const name = target.name;
 
-        let curr = this.state as any;
+        const curr = this.state as any;
 
         curr[name].Value = value;
+        curr[name].ModelState = new ModelStateEntry();
         this.setState(curr as RegisterForm);
     }
 
@@ -48,13 +49,15 @@ export class Register extends React.Component<RouteComponentProps<{}>, RegisterF
     handleSubmit(event: any) {
         event.preventDefault();
 
-        var form = new FormData((document.getElementById('register-form')) as any);
+        const form = new FormData((document.getElementById("register-form")) as any);
 
+        /*
         const model: IRegisterModel = {
             ConfirmPassword: this.state.ConfirmPassword.Value,
             Password: this.state.Password.Value,
             Email: this.state.Email.Value
         };
+        */
 
         fetch("/Account/Register",
                 {
@@ -63,7 +66,7 @@ export class Register extends React.Component<RouteComponentProps<{}>, RegisterF
                 })
             .then(res => res.json() as Promise<RegisterResponse>)
             .then(data => {
-                let currentState = this.state;
+                const currentState = this.state;
                 currentState.Email.ModelState = data.Email;
                 currentState.Password.ModelState = data.Password;
                 currentState.ConfirmPassword.ModelState = data.ConfirmPassword;
@@ -73,55 +76,35 @@ export class Register extends React.Component<RouteComponentProps<{}>, RegisterF
     }
 
     public render() {
-        return <div className="row">
-                   <div className="col-md-4">
-                       <form method="post" id="register-form">
-                           <h4>Create a new account.</h4>
-                           <hr/>
-                           {this.renderErrorMessages(this.state.GeneralModel.ModelState)}
-                           <div className="form-group">
-                               <label>Email</label>
-                               <input className="form-control"
-                                      value={this.state.Email.Value}
-                                      name="Email"
-                                      onChange={this.handleInputChange}
-                                      type="email"/>
-                               {this.renderErrorMessages(this.state.Email.ModelState)}
-                           </div>
-                           <div className="form-group">
-                               <label>Password</label>
-                               <input className="form-control"
-                                      value={this.state.Password.Value}
-                                      name="Password"
-                                      onChange={this.handleInputChange}
-                                      type="password" />
-                               {this.renderErrorMessages(this.state.Password.ModelState)}
-                           </div>
-                           <div className="form-group">
-                               <label>Confirm Password</label>
-                               <input className="form-control"
-                                      value={this.state.ConfirmPassword.Value}
-                                      name="ConfirmPassword"
-                                      onChange={this.handleInputChange}
-                                      type="password" />
-                               {this.renderErrorMessages(this.state.ConfirmPassword.ModelState)}
-                           </div>
-                           <button type="submit" className="btn btn-default" onClick={this.handleSubmit}>Register</button>
-                       </form>
+        return <div>
+                   <h1>Create a new account</h1>
+                   <div className="row">
+                       <div className="col-md-4">
+                           <form method="post" id="register-form">
+                               {EditorFor.renderErrorMessages(this.state.GeneralModel.ModelState)}
+                               <EditorFor label="Email"
+                                          name="Email"
+                                          value={this.state.Email.Value}
+                                          modelState={this.state.Email.ModelState}
+                                          onChange={this.handleInputChange}
+                                          type="email"/>
+                               <EditorFor label="Password"
+                                          name="Password"
+                                          value={this.state.Password.Value}
+                                          modelState={this.state.Password.ModelState}
+                                          onChange={this.handleInputChange}
+                                          type="password"/>
+                               <EditorFor label="Confirm Password"
+                                          name="ConfirmPassword"
+                                          value={this.state.ConfirmPassword.Value}
+                                          modelState={this.state.ConfirmPassword.ModelState}
+                                          onChange={this.handleInputChange}
+                                          type="password"/>
+                               <button type="submit" className="btn btn-default" onClick={this.handleSubmit}>Register</button>
+                           </form>
+                       </div>
                    </div>
-               </div >;
-    }
-
-    private renderErrorMessages(modelState: ModelStateEntry) {
-
-        if (modelState &&
-            modelState.errors) {
-            return <div>
-                {modelState.errors.map(error => <div className="text-danger">{error.errorMessage}</div>)}
-                   </div>;
-        } else {
-            return <div></div>;
-        }
+               </div>;
     }
 }
 
