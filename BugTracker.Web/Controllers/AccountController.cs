@@ -45,23 +45,14 @@ namespace BugTracker.Web.Controllers
                 }
                 AddErrors(result);
             }
-
-            var errors = new List<string>();
-            foreach (var modelStateValue in ModelState.Values)
-            {
-                foreach (var error in modelStateValue.Errors)
-                {
-                    errors.Add(error.ErrorMessage);
-                }
-            }
-            return Json(errors);
+            return Json(ModelState);
         }
 
         private void AddErrors(IdentityResult result)
         {
             foreach (var error in result.Errors)
             {
-                ModelState.AddModelError(string.Empty, error.Description);
+                ModelState.AddModelError("GeneralModelStateEntry", error.Description);
             }
         }
     }
