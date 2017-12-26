@@ -1,4 +1,5 @@
 ﻿import * as React from "react";
+import * as $ from 'jquery';
 import { RouteComponentProps } from "react-router";
 import { ModelStateEntry } from "../../MVCClassesPort/ModelStateEntry";
 import { GeneralModelStateResponse } from "../../MVCClassesPort/GeneralModelStateResponse";
@@ -50,29 +51,44 @@ export class LogIn extends React.Component<RouteComponentProps<{}>, LogInForm> {
     event.preventDefault();
 
     const form = new FormData((document.getElementById("register-form")) as any);
-
-    /*
-    const model: IRegisterModel = {
-        ConfirmPassword: this.state.ConfirmPassword.Value,
+    
+    const model: LogInModel = {
         Password: this.state.Password.Value,
-        Email: this.state.Email.Value
+        Email: this.state.Email.Value,
+        RememberMe: this.state.RememberMe.Value
     };
-    */
+    
 
-    fetch("/Account/LogIn",
-        {
-          method: "POST",
-          body: form
-        })
-      .then(res => res.json() as Promise<LogInResponse>)
-      .then(data => {
+    $.ajax({
+      type: "POST",
+      url: "/Account/LogIn",
+      data: model,
+      success: response => {
+        var data = response as LogInResponse;
+
         const currentState = this.state;
         currentState.Email.ModelState = data.Email;
         currentState.Password.ModelState = data.Password;
         currentState.RememberMe.ModelState = data.RememberMe;
         currentState.GeneralModel.ModelState = data.GeneralModelStateEntry;
         this.setState(currentState);
-      });
+      } ,
+    });
+
+    //fetch("/Account/LogIn",
+    //    {
+    //      method: "POST",
+    //      body: form
+    //    })
+    //  .then(res => res.json() as Promise<LogInResponse>)
+    //  .then(data => {
+    //    const currentState = this.state;
+    //    currentState.Email.ModelState = data.Email;
+    //    currentState.Password.ModelState = data.Password;
+    //    currentState.RememberMe.ModelState = data.RememberMe;
+    //    currentState.GeneralModel.ModelState = data.GeneralModelStateEntry;
+    //    this.setState(currentState);
+    //  });
   }
 
   render() {
