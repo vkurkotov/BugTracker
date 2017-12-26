@@ -63,15 +63,20 @@ export class LogIn extends React.Component<RouteComponentProps<{}>, LogInForm> {
       type: "POST",
       url: "/Account/LogIn",
       data: model,
-      success: response => {
-        var data = response as LogInResponse;
+      success: (response: any) => {
+          if (response.redirect) {
+              window.location.href = response.redirect;
+          } else {
+              const data = response as LogInResponse;
 
-        const currentState = this.state;
-        currentState.Email.ModelState = data.Email;
-        currentState.Password.ModelState = data.Password;
-        currentState.RememberMe.ModelState = data.RememberMe;
-        currentState.GeneralModel.ModelState = data.GeneralModelStateEntry;
-        this.setState(currentState);
+              const currentState = this.state;
+              currentState.Email.ModelState = data.Email;
+              currentState.Password.ModelState = data.Password;
+              currentState.RememberMe.ModelState = data.RememberMe;
+              currentState.GeneralModel.ModelState = data.GeneralModelStateEntry;
+              this.setState(currentState);
+          }
+        
       } ,
     });
 

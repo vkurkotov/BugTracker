@@ -60,7 +60,7 @@ namespace BugTracker.Web.Controllers
                 var result = await _signInManager.PasswordSignInAsync(model.Email,model.Password, model.RememberMe, lockoutOnFailure: false);
                 if (result.Succeeded)
                 {
-                    return Json(ModelState);
+                    return Json(new { redirect =  Url.Action("Index", "Home") });
                 }
                 if (result.RequiresTwoFactor)
                 {
