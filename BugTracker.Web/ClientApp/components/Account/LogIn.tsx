@@ -2,109 +2,109 @@
 import { RouteComponentProps } from "react-router";
 import { ModelStateEntry } from "../../MVCClassesPort/ModelStateEntry";
 import { GeneralModelStateResponse } from "../../MVCClassesPort/GeneralModelStateResponse";
-import { EditorFor } from "../EditorFor";
+import { EditorFor } from "../Forms/EditorFor";
+import { HorizontalForm } from "../Forms/HorizontalForm";
 
 export class LogIn extends React.Component<RouteComponentProps<{}>, LogInForm> {
-    constructor(props: RouteComponentProps<{}>) {
-        super(props);
+  constructor(props: RouteComponentProps<{}>) {
+    super(props);
 
-        this.handleInputChange = this.handleInputChange.bind(this);
-        this.handleSubmit = this.handleSubmit.bind(this);
+    this.handleInputChange = this.handleInputChange.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
 
-        const defaultState: LogInForm = {
-            Email: {
-                Value: "",
-                ModelState: new ModelStateEntry()
-            },
-            Password: {
-                Value: "",
-                ModelState: new ModelStateEntry()
-            },
-            GeneralModel: {
-                ModelState: new ModelStateEntry()
-            },
-            RememberMe: {
-                Value: false,
-                ModelState: new ModelStateEntry()
-            }
-        };
+    const defaultState: LogInForm = {
+      Email: {
+        Value: "",
+        ModelState: new ModelStateEntry()
+      },
+      Password: {
+        Value: "",
+        ModelState: new ModelStateEntry()
+      },
+      GeneralModel: {
+        ModelState: new ModelStateEntry()
+      },
+      RememberMe: {
+        Value: false,
+        ModelState: new ModelStateEntry()
+      }
+    };
 
-        this.state = defaultState;
-    }
+    this.state = defaultState;
+  }
 
-    handleInputChange(event: any) {
-        const target = event.target;
-        const value = target.type === "checkbox" ? target.checked : target.value;
-        const name = target.name;
+  handleInputChange(event: any) {
+    const target = event.target;
+    const value = target.type === "checkbox" ? target.checked : target.value;
+    const name = target.name;
 
-        const curr = this.state as any;
+    const curr = this.state as any;
 
-        curr[name].Value = value;
-        curr[name].ModelState = new ModelStateEntry();
-        this.setState(curr as LogInForm);
-    }
+    curr[name].Value = value;
+    curr[name].ModelState = new ModelStateEntry();
+    this.setState(curr as LogInForm);
+  }
 
 
-    handleSubmit(event: any) {
-        event.preventDefault();
+  handleSubmit(event: any) {
+    event.preventDefault();
 
-        const form = new FormData((document.getElementById("register-form")) as any);
+    const form = new FormData((document.getElementById("register-form")) as any);
 
-        /*
-        const model: IRegisterModel = {
-            ConfirmPassword: this.state.ConfirmPassword.Value,
-            Password: this.state.Password.Value,
-            Email: this.state.Email.Value
-        };
-        */
+    /*
+    const model: IRegisterModel = {
+        ConfirmPassword: this.state.ConfirmPassword.Value,
+        Password: this.state.Password.Value,
+        Email: this.state.Email.Value
+    };
+    */
 
-        fetch("/Account/LogIn",
-                {
-                    method: "POST",
-                    body: form
-                })
-            .then(res => res.json() as Promise<LogInResponse>)
-            .then(data => {
-                const currentState = this.state;
-                currentState.Email.ModelState = data.Email;
-                currentState.Password.ModelState = data.Password;
-                currentState.RememberMe.ModelState = data.RememberMe;
-                currentState.GeneralModel.ModelState = data.GeneralModelStateEntry;
-                this.setState(currentState);
-            });
-    }
+    fetch("/Account/LogIn",
+        {
+          method: "POST",
+          body: form
+        })
+      .then(res => res.json() as Promise<LogInResponse>)
+      .then(data => {
+        const currentState = this.state;
+        currentState.Email.ModelState = data.Email;
+        currentState.Password.ModelState = data.Password;
+        currentState.RememberMe.ModelState = data.RememberMe;
+        currentState.GeneralModel.ModelState = data.GeneralModelStateEntry;
+        this.setState(currentState);
+      });
+  }
 
-    render() {
-        return <div>
-                   <h1>Create a new account</h1>
-                   <div className="row">
-                       <div className="col-md-4">
-                           <form method="post" id="register-form">
-                               {EditorFor.renderErrorMessages(this.state.GeneralModel.ModelState)}
-                               <EditorFor label="Email"
-                                          name="Email"
-                                          value={this.state.Email.Value}
-                                          modelState={this.state.Email.ModelState}
-                                          onChange={this.handleInputChange}
-                                          type="Email" />
-                               <EditorFor label="Password"
-                                          name="Password"
-                                          value={this.state.Password.Value}
-                                          modelState={this.state.Password.ModelState}
-                                          onChange={this.handleInputChange}
-                                          type="Password" />
-                               <EditorFor label="Remember me"
-                                          name="RememberMe"
-                                          value={this.state.RememberMe.Value}
-                                          modelState={this.state.RememberMe.ModelState}
-                                          onChange={this.handleInputChange}
-                                          type="checkbox" />
-                               <button type="submit" className="btn btn-default" onClick={this.handleSubmit}>Log In</button>
-                           </form>
-                       </div>
-                   </div>
-               </div>;
-    }
+  render() {
+    return <div>
+             <h1>Log in</h1>
+             <div className="row">
+               <div className="col-md-7">
+                 <HorizontalForm handleSubmit={this.handleSubmit} submitLabel="Log In" id="register-form">
+                   {EditorFor.renderErrorMessages(this.state.GeneralModel.ModelState)}
+                   <EditorFor label="Email"
+                              name="Email"
+                              value={this.state.Email.Value}
+                              modelState={this.state.Email.ModelState}
+                              onChange={this.handleInputChange}
+                              type="Email"/>
+                   <EditorFor label="Password"
+                              name="Password"
+                              value={this.state.Password.Value}
+                              modelState={this.state.Password.ModelState}
+                              onChange={this.handleInputChange}
+                              type="Password"/>
+                   <EditorFor label="Remember me"
+                              name="RememberMe"
+                              value={this.state.RememberMe.Value}
+                              modelState={this.state.RememberMe.ModelState}
+                              onChange={this.handleInputChange}
+                              type="checkbox"/>
+                 </HorizontalForm>
+               </div>
+             </div>
+           </div>;
+  }
 }
 
 interface LogInModel {
