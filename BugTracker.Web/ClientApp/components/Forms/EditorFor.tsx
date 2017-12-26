@@ -42,7 +42,7 @@ export class EditorFor extends React.Component<EditorForProps, any> {
       modelState.validationState === ModelStateValue.Invalid &&
       modelState.errors) {
       return <div>
-               {modelState.errors.map(error => <div className="text-danger col-sm-offset-2" key="error">{error.errorMessage}</div>)}
+               {modelState.errors.map(error => <div className="text-danger col-sm-offset-2" key={error.errorMessage}>{error.errorMessage}</div>)}
              </div>;
     } else {
       return <div></div>;
@@ -52,7 +52,9 @@ export class EditorFor extends React.Component<EditorForProps, any> {
   private getErrorClassName(): string {
     if (this.props.modelState && this.props.modelState.validationState === ModelStateValue.Invalid) {
       return "has-error";
-    } else {
+    } if (this.props.modelState && this.props.modelState.validationState === ModelStateValue.Valid) {
+      return "has-success";
+    }else {
       return "";
     }
   }
