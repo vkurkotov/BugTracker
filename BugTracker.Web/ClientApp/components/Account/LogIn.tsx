@@ -5,6 +5,7 @@ import { ModelStateEntry } from "../../MVCClassesPort/ModelStateEntry";
 import { GeneralModelStateResponse } from "../../MVCClassesPort/GeneralModelStateResponse";
 import { EditorFor } from "../Forms/EditorFor";
 import { HorizontalForm } from "../Forms/HorizontalForm";
+import { LoadingPanel } from "../Forms/LoadingPanel";
 
 export class LogIn extends React.Component<RouteComponentProps<{}>, LogInForm> {
   constructor(props: RouteComponentProps<{}>) {
@@ -28,8 +29,9 @@ export class LogIn extends React.Component<RouteComponentProps<{}>, LogInForm> {
       RememberMe: {
         Value: false,
         ModelState: new ModelStateEntry()
-      }
-    };
+      },
+      isLoading: {value: false}
+  };
 
     this.state = defaultState;
   }
@@ -51,33 +53,39 @@ export class LogIn extends React.Component<RouteComponentProps<{}>, LogInForm> {
     event.preventDefault();
 
     const form = new FormData((document.getElementById("register-form")) as any);
-    
+
     const model: LogInModel = {
-        Password: this.state.Password.Value,
-        Email: this.state.Email.Value,
-        RememberMe: this.state.RememberMe.Value
+      Password: this.state.Password.Value,
+      Email: this.state.Email.Value,
+      RememberMe: this.state.RememberMe.Value
     };
-    
+
+    let currentState1 = this.state;
+    currentState1.isLoading.value = true;
+    this.setState(currentState1);
+
 
     $.ajax({
       type: "POST",
       url: "/Account/LogIn",
       data: model,
       success: (response: any) => {
-          if (response.redirect) {
-              window.location.href = response.redirect;
-          } else {
-              const data = response as LogInResponse;
 
-              const currentState = this.state;
-              currentState.Email.ModelState = data.Email;
-              currentState.Password.ModelState = data.Password;
-              currentState.RememberMe.ModelState = data.RememberMe;
-              currentState.GeneralModel.ModelState = data.GeneralModelStateEntry;
-              this.setState(currentState);
-          }
-        
-      } ,
+        if (response.redirect) {
+          this.props.history.push(response.redirect);
+        } else {
+          const data = response as LogInResponse;
+
+          let currentState = this.state;
+          currentState.Email.ModelState = data.Email;
+          currentState.Password.ModelState = data.Password;
+          currentState.RememberMe.ModelState = data.RememberMe;
+          currentState.GeneralModel.ModelState = data.GeneralModelStateEntry;
+          currentState.isLoading.value = false;
+          this.setState(currentState);
+        }
+
+      },
     });
 
     //fetch("/Account/LogIn",
@@ -102,6 +110,7 @@ export class LogIn extends React.Component<RouteComponentProps<{}>, LogInForm> {
              <div className="row">
                <div className="col-md-7">
                  <HorizontalForm handleSubmit={this.handleSubmit} submitLabel="Log In" id="register-form">
+            <LoadingPanel isShown={this.state.isLoading.value}/>
                    {EditorFor.renderErrorMessages(this.state.GeneralModel.ModelState)}
                    <EditorFor label="Email"
                               name="Email"
@@ -129,31 +138,32 @@ export class LogIn extends React.Component<RouteComponentProps<{}>, LogInForm> {
 }
 
 interface LogInModel {
-    Email: string;
-    Password: string;
-    RememberMe: boolean;
+  Email: string;
+  Password: string;
+  RememberMe: boolean;
 }
 
 interface LogInResponse extends GeneralModelStateResponse {
-    Email: ModelStateEntry;
-    Password: ModelStateEntry;
-    RememberMe: ModelStateEntry;
+  Email: ModelStateEntry;
+  Password: ModelStateEntry;
+  RememberMe: ModelStateEntry;
 }
 
 interface LogInForm {
-    Email: {
-        Value: string;
-        ModelState: ModelStateEntry;
-    };
-    Password: {
-        Value: string;
-        ModelState: ModelStateEntry;
-    };
-    RememberMe: {
-        Value: boolean;
-        ModelState: ModelStateEntry;
-    };
-    GeneralModel: {
-        ModelState: ModelStateEntry
-    };
+  Email: {
+    Value: string;
+    ModelState: ModelStateEntry;
+  };
+  Password: {
+    Value: string;
+    ModelState: ModelStateEntry;
+  };
+  RememberMe: {
+    Value: boolean;
+    ModelState: ModelStateEntry;
+  };
+  GeneralModel: {
+    ModelState: ModelStateEntry
+  };
+  isLoading: { value: boolean };
 }

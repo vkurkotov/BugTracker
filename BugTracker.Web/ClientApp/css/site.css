@@ -64,3 +64,43 @@
         text-overflow: ellipsis;
     }
 }
+
+.centeredOverlay {
+    position: absolute;
+    background-color: #000000;
+    opacity: 0.8;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    color: #ffffff;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: xx-large;
+    z-index: 2;
+}
+
+.centeredOverlay span {
+    display: inline-block;
+    vertical-align: middle;
+    margin-right: 20px;
+}
+
+.glyphicon-spin {
+    animation-name: spin;
+    animation-duration: 2000ms;
+    animation-iteration-count: infinite;
+    animation-timing-function: linear; 
+}
+
+@keyframes spin {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}
