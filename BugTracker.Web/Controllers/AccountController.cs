@@ -41,7 +41,7 @@ namespace BugTracker.Web.Controllers
                     //    "Please confirm your account by clicking this link: <a href=\"" + callbackUrl + "\">link</a>");
                     await _signInManager.SignInAsync(user, isPersistent: false);
                     //_logger.LogInformation(3, "User created a new account with password.");
-                    return Json(new {Result = true});
+                    return Json(new { redirect = Url.Action("Index", "Home") });
                 }
                 AddErrors(result);
             }
@@ -57,7 +57,7 @@ namespace BugTracker.Web.Controllers
             {
                 // This doesn't count login failures towards account lockout
                 // To enable password failures to trigger account lockout, set lockoutOnFailure: true
-                var result = await _signInManager.PasswordSignInAsync(model.Email,model.Password, model.RememberMe, lockoutOnFailure: false);
+                var result = await _signInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, lockoutOnFailure: false);
                 if (result.Succeeded)
                 {
                     return Json(new { redirect =  Url.Action("Index", "Home") });

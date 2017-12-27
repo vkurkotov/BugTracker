@@ -4,8 +4,8 @@ import { Layout } from './components/Layout';
 import { Home } from './components/Home';
 import { FetchData } from './components/FetchData';
 import { Counter } from './components/Counter';
-import { Register } from './components/Account/Register';
-import { LogIn } from './components/Account/LogIn';
+import { Register } from './components/account/register/register.component';
+import { LogIn } from './components/account/login/logIn.component';
 
 export const routes = <Layout>
                           <Route exact path='/' component={ Home }/>
