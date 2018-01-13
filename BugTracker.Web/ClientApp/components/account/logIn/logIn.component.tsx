@@ -14,7 +14,7 @@ export class LogIn extends React.Component<RouteComponentProps<{}>, LogInForm> {
     this.handleSubmit = this.handleSubmit.bind(this);
 
     const defaultState: LogInForm = {
-      Email: {
+      UserName: {
         Value: "",
         ModelState: new ModelStateEntry()
       },
@@ -54,7 +54,7 @@ export class LogIn extends React.Component<RouteComponentProps<{}>, LogInForm> {
 
     const model: LogInModel = {
       Password: this.state.Password && this.state.Password.Value,
-      Email: this.state.Email && this.state.Email.Value,
+      UserName: this.state.UserName && this.state.UserName.Value,
       RememberMe: this.state.RememberMe && this.state.RememberMe.Value
     };
 
@@ -69,7 +69,7 @@ export class LogIn extends React.Component<RouteComponentProps<{}>, LogInForm> {
           const data = response as LogInResponse;
 
           if (data != null && data) {
-            this.updateModelStateFromResponse(data, "Email");
+            this.updateModelStateFromResponse(data, "UserName");
             this.updateModelStateFromResponse(data, "Password");
             this.updateModelStateFromResponse(data, "RememberMe");
             this.updateModelStateFromResponse(data, "GeneralModelStateEntry");
@@ -99,13 +99,14 @@ export class LogIn extends React.Component<RouteComponentProps<{}>, LogInForm> {
                <div className="col-md-7">
                  <HorizontalForm handleSubmit={this.handleSubmit} submitLabel="Log In">
                    <LoadingPanel isShown={this.state.isLoading}/>
-                   <ErrorMessages modelState={this.state.GeneralModelStateEntry && this.state.GeneralModelStateEntry.ModelState}/>
-                   <InputText label="Email"
-                              name="Email"
-                              value={this.state.Email ? this.state.Email.Value : ""}
-                              modelState={this.state.Email ? this.state.Email.ModelState : new ModelStateEntry()}
+                   <ErrorMessages modelState={this.state.GeneralModelStateEntry &&
+                     this.state.GeneralModelStateEntry.ModelState}/>
+                   <InputText label="User Name"
+                              name="UserName"
+                              value={this.state.UserName ? this.state.UserName.Value : ""}
+                              modelState={this.state.UserName ? this.state.UserName.ModelState : new ModelStateEntry()}
                               onChange={this.handleInputChange}
-                              type="Email"/>
+                              type="text"/>
                    <InputText label="Password"
                               name="Password"
                               value={this.state.Password && this.state.Password.Value}

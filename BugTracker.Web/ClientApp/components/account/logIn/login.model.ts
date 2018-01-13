@@ -1,19 +1,19 @@
 ﻿import { GeneralModelStateResponse, ModelStateEntry} from "../../common/MvcClasses"
 
 export interface LogInModel {
-  Email?: string;
+  UserName?: string;
   Password?: string;
   RememberMe?: boolean;
 }
 
 export interface LogInResponse extends GeneralModelStateResponse {
-  Email?: ModelStateEntry;
+  UserName?: ModelStateEntry;
   Password?: ModelStateEntry;
   RememberMe?: ModelStateEntry;
 }
 
 export interface LogInForm {
-  Email?: {
+  UserName?: {
     Value: string;
     ModelState: ModelStateEntry;
   };
