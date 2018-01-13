@@ -81,6 +81,13 @@ namespace BugTracker.Web.Controllers
             return Json(ModelState);
         }
 
+        [HttpPost]
+        public async Task<IActionResult> LogOut()
+        {
+            await _signInManager.SignOutAsync();
+            return Json(new { redirect = Url.Action("Index", "Home") });
+        }
+
         private void AddErrors(IdentityResult result)
         {
             foreach (var error in result.Errors)
