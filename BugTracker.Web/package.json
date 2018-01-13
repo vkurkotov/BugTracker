@@ -4,6 +4,7 @@
   "version": "0.0.0",
   "devDependencies": {
     "@types/history": "4.6.0",
+    "@types/jquery": "3.2.17",
     "@types/react": "15.0.35",
     "@types/react-dom": "15.5.1",
     "@types/react-hot-loader": "3.0.3",
@@ -18,6 +19,7 @@
     "event-source-polyfill": "0.0.9",
     "extract-text-webpack-plugin": "2.1.2",
     "file-loader": "0.11.2",
+    "history": "4.7.2",
     "isomorphic-fetch": "2.2.1",
     "jquery": "3.2.1",
     "json-loader": "0.5.4",
