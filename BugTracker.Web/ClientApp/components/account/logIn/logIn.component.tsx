@@ -94,9 +94,8 @@ export class LogIn extends React.Component<RouteComponentProps<{}>, LogInForm> {
 
   render() {
     return <div>
-             <h1>Log in</h1>
              <div className="row">
-               <div className="col-md-7">
+               <div className="col-md-8 col-md-offset-2">
                  <HorizontalForm handleSubmit={this.handleSubmit} submitLabel="Log In">
                    <LoadingPanel isShown={this.state.isLoading}/>
                    <ErrorMessages modelState={this.state.GeneralModelStateEntry &&
@@ -113,7 +112,7 @@ export class LogIn extends React.Component<RouteComponentProps<{}>, LogInForm> {
                               modelState={this.state.Password && this.state.Password.ModelState}
                               onChange={this.handleInputChange}
                               type="Password"/>
-                   <InputCheckBox label="Remember me"
+                   <InputCheckBox label="Keep me signed in"
                                   name="RememberMe"
                                   value={this.state.RememberMe && this.state.RememberMe.Value}
                                   modelState={this.state.RememberMe && this.state.RememberMe.ModelState}
