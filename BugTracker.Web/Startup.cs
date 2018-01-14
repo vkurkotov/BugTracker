@@ -28,8 +28,6 @@ namespace BugTracker.Web
             services.AddDbContext<ApplicationDbContext>(options =>
             {
                 options.UseSqlServer(Configuration.GetConnectionString("BugTrackerDbConnectionString"));
-                var context = new ApplicationDbContext(options.Options);
-                context.Database.Migrate();
             });
 
             services.AddIdentity<ApplicationUser, IdentityRole>()
@@ -85,6 +83,11 @@ namespace BugTracker.Web
             else
             {
                 app.UseExceptionHandler("/Home/Error");
+                using (var serviceScope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope())
+                {
+                    serviceScope.ServiceProvider.GetService<ApplicationDbContext>()
+                        .Database.Migrate();
+                }
             }
 
             app.UseStaticFiles();
