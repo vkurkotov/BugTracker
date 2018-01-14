@@ -26,7 +26,11 @@ namespace BugTracker.Web
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<ApplicationDbContext>(options =>
-                options.UseSqlServer(Configuration.GetConnectionString("BugTrackerDbConnectionString")));
+            {
+                options.UseSqlServer(Configuration.GetConnectionString("BugTrackerDbConnectionString"));
+                var context = new ApplicationDbContext(options.Options);
+                context.Database.Migrate();
+            });
 
             services.AddIdentity<ApplicationUser, IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>()
